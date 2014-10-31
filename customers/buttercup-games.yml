@@ -1,0 +1,25 @@
+---
+# This playbook deploys all sub playbooks
+
+- name: apply common configuration to all nodes
+  hosts: tag_Customer_buttercup-games
+  user: ubuntu
+  sudo: yes
+
+  roles:
+    - common
+  
+- name: apply search_head configuration to search_head nodes
+  hosts: tag_Customer_buttercup-games:&tag_Role_sh1
+  user: ubuntu
+  sudo: yes
+
+  roles:
+    - search_head
+
+
+
+
+# General Variables
+  vars:
+    splunk_binary: 'splunk-6.1.1-207789-linux-2.6-amd64.deb'

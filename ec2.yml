@@ -1,0 +1,13 @@
+---
+# Provision a customer cluster
+# Usage:
+#   ansible-playbook ec2.yml -e "customer=sample"
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - group_vars/{{ customer }}.yml
+
+  roles:
+   - role: ec2

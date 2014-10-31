@@ -1,0 +1,6 @@
+---
+# This playbook contains common tasks in this role
+
+- include: splunk.yml
+- include: web.yml
+- include: security.yml
