@@ -12,5 +12,24 @@
    - configuration
    - security
 
+- name: copy .bash_profile for splunk-admin
+  tags:
+   - configuration
+  copy: src=home/splunk-admin/.bash_profile dest=/home/splunk-admin/.bash_profile owner=splunk-admin group=splunk-admin mode=644
+
+- name: copy .bash_profile for root
+  tags:
+   - configuration
+  copy: src=home/root/.bash_profile dest=/home/root/.bash_profile owner=root group=root mode=644
+
+- name: copy .vimrc for splunk-admin
+  tags:
+   - configuration
+  copy: src=home/splunk-admin/.vimrc dest=/home/splunk-admin/.vimrc owner=splunk-admin group=splunk-admin mode=644
+
+- name: copy .vimrc for root
+  tags:
+   - configuration
+  copy: src=home/root/.vimrc dest=/home/root/.vimrc owner=root group=root mode=644
 
 
