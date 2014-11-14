@@ -20,7 +20,7 @@
 - name: copy .bash_profile for root
   tags:
    - configuration
-  copy: src=home/root/.bash_profile dest=/home/root/.bash_profile owner=root group=root mode=644
+  copy: src=root/.bash_profile dest=/root/.bash_profile owner=root group=root mode=644
 
 - name: copy .vimrc for splunk-admin
   tags:
@@ -30,6 +30,6 @@
 - name: copy .vimrc for root
   tags:
    - configuration
-  copy: src=home/root/.vimrc dest=/home/root/.vimrc owner=root group=root mode=644
+  copy: src=root/.vimrc dest=/root/.vimrc owner=root group=root mode=644
 
 
