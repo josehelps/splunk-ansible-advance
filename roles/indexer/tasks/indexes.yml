@@ -4,5 +4,5 @@
 - name: copy indexes.conf 
   tags:
    - install
-  copy: src=opt/splunk/etc/system/local/indexes.yml dest=/opt/splunk/etc/system/local owner=splunk group=splunk mode=755
-notify: restart splunk
+  copy: src=opt/splunk/etc/system/local/indexes.conf dest=/opt/splunk/etc/system/local owner=splunk group=splunk mode=755
+  notify: restart splunk

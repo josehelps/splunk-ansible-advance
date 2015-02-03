@@ -11,7 +11,7 @@
   tags:
    - install
    - security
-  user: name=splunk comment="Splunk service user" shell=/usr/sbin/nologin groups=splunk,sudo createhome=no 
+  user: name=splunk comment="Splunk service user" shell=/usr/sbin/nologin groups=splunk createhome=no 
 
 - name: make /opt writetable by splunk
   tags:
@@ -23,7 +23,7 @@
   stat: path=/opt/splunk
   register: splunk_path
 
-- name: splunk is install 
+- name: is splunk installed? 
   tags: install
   debug: msg='splunk is already installed under /opt/splunk'
   when: splunk_path.stat.exists
@@ -49,8 +49,8 @@
    - install
   shell: /opt/splunk/bin/splunk enable boot-start
   when: splunk_path.stat.exists == false
-  sudo: yes
-  sudo_user: splunk
+#  sudo: yes
+#  sudo_user: splunk
 
 - name: make /etc/init.d/splunk executable
   tags:

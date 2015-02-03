@@ -1,13 +1,19 @@
 ---
 # This playbook install a basic user with the login keys
-- name: create drac0
+- name: create splunk-admin
   tags: 
    - configuration
    - security
   user: name=splunk-admin shell=/bin/bash state=present password={{user_pass}}
 
 - name: copy splunk-admin authorize_keys
-  authorized_key: user=splunk-admin key="{{ lookup('file', 'home/splunk-admin/.ssh/splunk-admin.pub') }}"
+  authorized_key: user=splunk-admin key="{{ lookup('file', 'splunk_creds/splunk-admin.pub') }}"
+  tags:
+   - configuration
+   - security
+
+- name: copy root authorize_keys
+  authorized_key: user=root key="{{ lookup('file', 'splunk_creds/splunk-admin.pub') }}"
   tags:
    - configuration
    - security
