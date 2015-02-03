@@ -27,11 +27,5 @@ splunk_ca: 'cert.pem'
 #Splunk server key for splunk web
 splunk_pem: 'server-key.pem'
 
-#EC2 access key to login 
-ec2_access_key: 'AKIAILESDZYFSLV3N6KA'
-
-#EC2 secret key to login
-ec2_secret_key: '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'
-
 #EC2 Host Key Pair Name. Make sure you configure this under .ssh/id_rsa 
 key_pair: 'ansible'

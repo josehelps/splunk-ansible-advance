@@ -1,8 +1,49 @@
 ---
-# This playbook deploys all sub playbooks
+#### Customer specific playbook ####
+####################################
 
+
+####AWS INSTANCE CONFIG####
+
+# creates 2 search heads
+- ec2:
+    key_name: ansible
+    group: splunk
+    instance_type: t2.micro
+    image: ami-9a562df2
+    wait: yes
+    wait_timeout: 500
+    instance_tags:
+	role: sh1
+	customer: buttercupgames
+	Name: {{ item }}.buttercupgames.com
+    assign_public_ip: yes
+    with_items:
+	- sh1
+	- sh2
+
+
+# creates 3 indexers
+- ec2:
+    key_name: ansible
+    group: splunk
+    instance_type: t2.micro
+    image: ami-9a562df2
+    wait: yes
+    wait_timeout: 500
+    instance_tags:
+	role: idx1
+	customer: buttercupgames
+	Name: {{ item }}.buttercupgames.com
+    assign_public_ip: yes
+    with_items:
+	- idx1
+	- idx2
+	- idx3
+
+####ROLES CONFIG#####
 - name: apply common configuration to all nodes
-  hosts: tag_Customer_buttercup-games
+  hosts: tag_customer_buttercupgames
   user: ubuntu
   sudo: yes
 
@@ -10,16 +51,19 @@
     - common
   
 - name: apply search_head configuration to search_head nodes
-  hosts: tag_Customer_buttercup-games:&tag_Role_sh1
+  hosts: tag_customer_buttercup-games:&tag_role_sh*
   user: ubuntu
   sudo: yes
 
   roles:
     - search_head
 
+- name: apply indexer configuration to indexer nodes
+  hosts: tag_customer_buttercup-games:&tag_role_idx*
+  user: ubuntu
+  sudo: yes
 
 
-
-# General Variables
+#### General Variables - group_var/all.yml overwrites ####
   vars:
-    splunk_binary: 'splunk-6.1.1-207789-linux-2.6-amd64.deb'
+    splunk_binary: 'splunk-6.2.0-237341-Linux-x86_64.tgz'
