@@ -20,7 +20,7 @@
     region: us-east-1
     vpc_subnet: subnet-9ebf5fc7 
   tasks:
-# creates 3 search heads
+# creates 2 search heads
     - name: Launching search heads
       ec2:
          key_name: "{{ keypair }}"
@@ -76,7 +76,6 @@
 
 
 - name: apply common configuration to all nodes
-  connection: local
   hosts: '*_buttercupgames'
   user: ubuntu
   sudo: yes
