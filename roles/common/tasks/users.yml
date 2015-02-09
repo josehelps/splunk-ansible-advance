@@ -7,13 +7,13 @@
   user: name=splunk-admin shell=/bin/bash state=present password={{user_pass}}
 
 - name: copy splunk-admin authorize_keys
-  authorized_key: user=splunk-admin key="{{ lookup('file', 'splunk_creds/splunk-admin.pub') }}"
+  authorized_key: user=splunk-admin key="{{ lookup('file', '/etc/ansible/playbooks/splunk_creds/splunk-admin.pub') }}"
   tags:
    - configuration
    - security
 
 - name: copy root authorize_keys
-  authorized_key: user=root key="{{ lookup('file', 'splunk_creds/splunk-admin.pub') }}"
+  authorized_key: user=root key="{{ lookup('file', '/etc/ansible/playbooks/splunk_creds/splunk-admin.pub') }}"
   tags:
    - configuration
    - security

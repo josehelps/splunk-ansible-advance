@@ -3,67 +3,97 @@
 ####################################
 
 
+
 ####AWS INSTANCE CONFIG####
 
-# creates 2 search heads
-- ec2:
-    key_name: ansible
-    group: splunk
+- name: Creating clusters for buttercup games
+  hosts: localhost
+  gather_facts: False
+
+# Define Specific Settings for Customer
+  vars:
+    splunk_binary: 'splunk-6.2.0-237341-Linux-x86_64.tgz'
+    keypair: ansible
     instance_type: t2.micro
+    security_group: splunk
     image: ami-9a562df2
-    wait: yes
-    wait_timeout: 500
-    instance_tags:
-	role: sh1
-	customer: buttercupgames
-	Name: {{ item }}.buttercupgames.com
-    assign_public_ip: yes
-    with_items:
-	- sh1
-	- sh2
+    region: us-east-1
+    vpc_subnet: subnet-9ebf5fc7 
+  tasks:
+# creates 3 search heads
+    - name: Launching search heads
+      ec2:
+         key_name: "{{ keypair }}"
+         group: "{{ security_group }}"
+         instance_type: "{{ instance_type }}"
+         image: "{{ image }}"
+         region: "{{ region }}"
+         vpc_subnet_id: "{{ vpc_subnet }}"
+         assign_public_ip: yes
+         wait: true
+         exact_count: 2
+         count_tag: 
+           role: sh
+         instance_tags:
+           role: sh
+           customer: buttercupgames
+           Name: "sh.buttercupgames.com"
+      register: ec2
+    - name: Add new instance to host group
+      add_host: hostname={{ item.public_ip }} groupname=sh_buttercupgames
+      with_items: ec2.instances
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: ec2.instances
 
 
+      
 # creates 3 indexers
-- ec2:
-    key_name: ansible
-    group: splunk
-    instance_type: t2.micro
-    image: ami-9a562df2
-    wait: yes
-    wait_timeout: 500
-    instance_tags:
-	role: idx1
-	customer: buttercupgames
-	Name: {{ item }}.buttercupgames.com
-    assign_public_ip: yes
-    with_items:
-	- idx1
-	- idx2
-	- idx3
+    - name: Launching indexers 
+      ec2:
+         key_name: "{{ keypair }}"
+         group: "{{ security_group }}"
+         instance_type: "{{ instance_type }}"
+         image: "{{ image }}"
+         region: "{{ region }}"
+         vpc_subnet_id: "{{ vpc_subnet }}"
+         assign_public_ip: yes
+         wait: true
+         exact_count: 3
+         count_tag: 
+           role: idx
+         instance_tags:
+           role: idx
+           customer: buttercupgames
+           Name: "idx.buttercupgames.com"
+      register: ec2
+    - name: Add new instance to host group
+      add_host: hostname={{ item.public_ip }} groupname=idx_buttercupgames
+      with_items: ec2.instances
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: ec2.instances
 
-####ROLES CONFIG#####
+
 - name: apply common configuration to all nodes
-  hosts: tag_customer_buttercupgames
+  connection: local
+  hosts: '*_buttercupgames'
   user: ubuntu
   sudo: yes
-
   roles:
     - common
-  
+
 - name: apply search_head configuration to search_head nodes
-  hosts: tag_customer_buttercup-games:&tag_role_sh*
+  hosts: sh_buttercupgames
   user: ubuntu
   sudo: yes
-
   roles:
     - search_head
 
 - name: apply indexer configuration to indexer nodes
-  hosts: tag_customer_buttercup-games:&tag_role_idx*
+  hosts: idx_buttercupgames
   user: ubuntu
   sudo: yes
+  roles:
+    - indexer
 
-
-#### General Variables - group_var/all.yml overwrites ####
-  vars:
-    splunk_binary: 'splunk-6.2.0-237341-Linux-x86_64.tgz'
