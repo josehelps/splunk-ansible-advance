@@ -61,7 +61,7 @@
   tags:
    - configuration
    - security
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=present update_cache=yes
   with_items:
    - chkrootkit
    - rkhunter
@@ -73,7 +73,7 @@
 - name: install basic utilities debian
   tags:
    - configuration
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=present update_cache=yes
   with_items:
    - vim
    - screen

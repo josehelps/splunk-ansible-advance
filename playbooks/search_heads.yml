@@ -4,6 +4,7 @@
 - name: apply common configuration to all nodes
   hosts: search_head
   user: root
+#  sudo: True
   vars:
     # splunk binary to install
     splunk_binary: 'splunk-6.1.4-233537-Linux-x86_64.tgz'
