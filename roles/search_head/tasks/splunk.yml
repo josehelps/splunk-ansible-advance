@@ -49,13 +49,15 @@
    - install
   shell: /opt/splunk/bin/splunk enable boot-start
   when: splunk_path.stat.exists == false
-#  sudo: yes
-#  sudo_user: splunk
+  sudo: yes
+  sudo_user: splunk
 
 - name: make /etc/init.d/splunk executable
   tags:
    - install
   file: path=/etc/init.d/splunk mode=755
+  sudo: yes
+  sudo_user: splunk
 
 - name: touch ui so it does not ask for the password to be changed
   tags:
